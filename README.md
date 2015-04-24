@@ -1,4 +1,4 @@
-**Parallel Seam Carving**
 # Parallel-Seam-Carving
-# Parallel-Seam-Carving
-# Parallel-Seam-Carving
+**TO DO**
+
+Everything has to be done!
