@@ -69,9 +69,9 @@ void computeEnergyMap(Mat& Img , pair_vector& row1, vector_vector& enMap){
 
   // compute energy
 
-   for(int i = 0; i < height; i++){
+   for(int i = 0; i < height-1; i++){
 
-     for(int j =0; j < width; j++){
+     for(int j = 0; j < width-1; j++){
 
      // for single channel
       uchar curr = Img.at<uchar>(i,j);
@@ -106,12 +106,10 @@ void computeEnergyMap(Mat& Img , pair_vector& row1, vector_vector& enMap){
 
 unsigned char getEnergy (int j, int i, int height, int width, vector_vector& energyMap){
 
-  if ((j < 0 || j >= height) ||
-      (i < 0 || i >= width)) {
-
+  if ((j <= 0 || j >= height) ||
+      (i <= 0 || i >= width)) {
     return UCHAR_MAX;
-   }
-
+  }
   return energyMap[j][i];
 }
 
@@ -165,7 +163,7 @@ void computeSeamMap(vector_vector& energyMap, pair_vector& r1, int xCount, int h
       minCol += 1;
     }
     seamMap[i][j] = minCol;
-    energyMap[j][minCol] = UCHAR_MAX;
+    //energyMap[j][minCol] = UCHAR_MAX;
    }
   }
 }
@@ -179,22 +177,32 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
      for(int j=0; j < inImg.cols; j++){
        int found = 0;
        for (int k=0; k < xCount; k++) {
-	
-         if (j == seamMap[k][i]) {
-	         found = 1;
-	         break;
-	       }
+
+	 if (j == seamMap[k][i]) {
+	   found = 1;
+	   break;
+	 }
+
        }
        if (!found) {
-	   //outImg.data[i*outImg.cols+count] = inImg.data[i*inImg.cols+j];
-	 
-     outImg.at<Vec3b>(i,count) = inImg.at<Vec3b>(i,j);
-     
-     count++;
+	 outImg.at<uchar>(i,count) = inImg.at<uchar>(i,j);
+	 count++;
        }
      }
   }
 }
+
+// void testSeams(cv::Mat& testImg, cv::Mat& inImg, vector_vector& seamMap, int xCount) {
+
+//   for (int k = 0 ; k < xCount; k++) {
+//     for (int i = 0; i < inImg.rows; i++) {
+// 	int remCol = seamMap[k][i];
+// 	testImg.at<uchar>(i,remCol) = 255;
+//     }
+//   }
+// }
+
+
 
 
 int main( int argc, char* argv[]  ){
@@ -208,10 +216,11 @@ int main( int argc, char* argv[]  ){
   displayImage("input image", inImg);
 
   int width, height;
+
   int yCount = 0;
 
   queryDimensions(inImg, &height, &width);
-  int xCount = 250; // number of seams to be removed
+  int xCount = 40; // number of seams to be removed
 
   // declarations
   vector_vector energyMap(height, vector<unsigned int>(width,1));
@@ -224,27 +233,29 @@ int main( int argc, char* argv[]  ){
   vector_vector& enMap = energyMap;
   vector_vector& rSeamMap = seamMap;
 
+
  // right now use grayScale image for energy compute
   cv::Mat imGray;
   cvtColor( inImg, imGray,CV_BGR2GRAY);
+
 
   // calculate the energyMap
   minCostEnergy(imGray, r1, enMap);
 
   //create a data structure with <index,value> pair vector, then sort by value
   sort(r1.begin(), r1.end() );
-  cout << r1[0].second<<" " << r1[1].second << "r1\n";
 
   // [1] Create Seams one by one
   computeSeamMap(enMap,r1, xCount, height, width, rSeamMap );
 
   // container for the output image
-  cv::Mat outImg(height,width-xCount,CV_8UC3);
+  cv::Mat outImg(height,width-xCount,CV_8UC1);
   //cv::Mat testImg(height, width, CV_8UC1);
   cv::Mat testImg = imGray.clone();
 
   // [2] Remove seams one by one.
-  removeSeams(outImg, inImg, seamMap, xCount);
+
+  removeSeams(outImg, imGray, seamMap, xCount);
   //testSeams(testImg, imGray, seamMap, xCount);
 
   // write the image back and show the image
@@ -254,7 +265,6 @@ int main( int argc, char* argv[]  ){
   waitOnEsc();
 
  return 0;
-
 }
 
 
