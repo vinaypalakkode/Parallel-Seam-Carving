@@ -3,4 +3,4 @@
 
 **Seam Carving like algorithm**
 
-Usage: ./BlurImage <input image> <number of seams>
+Usage: ./BlurImage *input image* *number of seams*
