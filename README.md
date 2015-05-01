@@ -1,4 +1,6 @@
 # Parallel-Seam-Carving
 **TO DO**
 
-Everything has to be done!
+**Seam Carving like algorithm**
+
+Usage: ./BlurImage <input image> <number of seams>
