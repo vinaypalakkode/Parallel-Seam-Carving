@@ -179,10 +179,11 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
      for(int j=0; j < inImg.cols; j++){
        int found = 0;
        for (int k=0; k < xCount; k++) {
-	 if (j == seamMap[k][i]) {
-	   found = 1;
-	   break;
-	 }
+	
+         if (j == seamMap[k][i]) {
+	         found = 1;
+	         break;
+	       }
        }
        if (!found) {
 	   outImg.data[i*outImg.cols+count] = inImg.data[i*inImg.cols+j];
@@ -191,40 +192,6 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
      }
   }
 }
-
-// void testSeams(cv::Mat& testImg, cv::Mat& inImg, vector_vector& seamMap, int xCount) {
-//   for (int k=0; k < xCount; k++) {
-//      for (int i = 0; i < inImg.rows; i++){
-//        for(int j=0; j < inImg.cols; j++){
-//  	 if (j == seamMap[k][i]) {
-//  	   //  testImg.data[i*inImg.cols+j] = 255;
-
-//  	   testImg.at<uchar>(i,j) = 255;
-//             //cout << "( "<<i << ", "<<j<<" )";
-//  	   if (k == 2) {
-//  	     std::cout << std::endl;
-//  	   }
-
-//  	 }
-//  	 else {
-//  	   testImg.data[i*inImg.cols+j] = inImg.data[i*inImg.cols+j];
-
-//  	 }
-//        }
-//      }
-//    }
-// }
-
-// void testSeams(cv::Mat& testImg, cv::Mat& inImg, vector_vector& seamMap, int xCount) {
-
-//   for (int k = 0 ; k < xCount; k++) {
-//     for (int i = 0; i < inImg.rows; i++) {
-// 	int remCol = seamMap[k][i];
-// 	testImg.at<uchar>(i,remCol) = 255;
-//     }
-//   }
-// }
-
 
 
 
@@ -239,7 +206,6 @@ int main( int argc, char* argv[]  ){
   displayImage("input image", inImg);
 
   int width, height;
-
   int yCount = 0;
 
   queryDimensions(inImg, &height, &width);
@@ -256,11 +222,9 @@ int main( int argc, char* argv[]  ){
   vector_vector& enMap = energyMap;
   vector_vector& rSeamMap = seamMap;
 
-
  // right now use grayScale image for energy compute
   cv::Mat imGray;
   cvtColor( inImg, imGray,CV_BGR2GRAY);
-
 
   // calculate the energyMap
   minCostEnergy(imGray, r1, enMap);
@@ -268,7 +232,6 @@ int main( int argc, char* argv[]  ){
   //create a data structure with <index,value> pair vector, then sort by value
   sort(r1.begin(), r1.end() );
   cout << r1[0].second<<" " << r1[1].second << "r1\n";
-
 
   // [1] Create Seams one by one
   computeSeamMap(enMap,r1, xCount, height, width, rSeamMap );
@@ -279,7 +242,6 @@ int main( int argc, char* argv[]  ){
   cv::Mat testImg = imGray.clone();
 
   // [2] Remove seams one by one.
-
   removeSeams(outImg, imGray, seamMap, xCount);
   //testSeams(testImg, imGray, seamMap, xCount);
 
@@ -290,6 +252,7 @@ int main( int argc, char* argv[]  ){
   waitOnEsc();
 
  return 0;
+
 }
 
 
