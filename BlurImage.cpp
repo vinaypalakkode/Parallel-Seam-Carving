@@ -102,7 +102,7 @@ void computeEnergyMap(Mat& Img , pair_vector& row1, vector_vector& enMap){
      }
 
      }
-  
+
    }
 
 }
@@ -166,7 +166,7 @@ void computeSeamMap(vector_vector& energyMap, pair_vector& r1, int xCount, int h
       minCol += 1;
     }
     seamMap[i][j] = minCol;
-    //energyMap[j][minCol] = UCHAR_MAX;
+    energyMap[j][minCol] = UCHAR_MAX;
    }
   }
 }
@@ -176,16 +176,16 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
 
   // plane 1:
   for (int i = 0; i < inImg.rows; i++){
- 
+
     int count = 0;
-    
+
     for(int j=0; j < inImg.cols; j++){
-    
+
       int found = 0;
        for (int k=0; k < xCount; k++) {
 
 	         if (j == seamMap[k][i]) {
-	            
+
              found = 1;
 	           break;
 	        }
@@ -194,7 +194,7 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
        if (!found) {
 
          //	 outImg.at<uchar>(i,count) = inImg.at<uchar>(i,j);
-	
+
          outImg.at<Vec3b>(i,count) = inImg.at<Vec3b>(i,j);
          count++;
        }
