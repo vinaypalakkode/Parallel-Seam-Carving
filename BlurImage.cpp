@@ -15,9 +15,9 @@ using namespace std;
 void checkArgs(int args){
 
 
-  if(args!=2){
+  if(args!=3 ){
 
-    std::cout<<" Usage: ./<exec> <input image name> ";
+    std::cout<<" Usage: ./<exec> <input image name> <seam count>";
     exit(0);
   }
 
@@ -100,8 +100,11 @@ void computeEnergyMap(Mat& Img , pair_vector& row1, vector_vector& enMap){
       row1.push_back( idxEnergy );
 
      }
-    }
+
+     }
+  
    }
+
 }
 
 unsigned char getEnergy (int j, int i, int height, int width, vector_vector& energyMap){
@@ -173,20 +176,27 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
 
   // plane 1:
   for (int i = 0; i < inImg.rows; i++){
-     int count = 0;
-     for(int j=0; j < inImg.cols; j++){
-       int found = 0;
+ 
+    int count = 0;
+    
+    for(int j=0; j < inImg.cols; j++){
+    
+      int found = 0;
        for (int k=0; k < xCount; k++) {
 
-	 if (j == seamMap[k][i]) {
-	   found = 1;
-	   break;
-	 }
+	         if (j == seamMap[k][i]) {
+	            
+             found = 1;
+	           break;
+	        }
 
        }
        if (!found) {
-	 outImg.at<uchar>(i,count) = inImg.at<uchar>(i,j);
-	 count++;
+
+         //	 outImg.at<uchar>(i,count) = inImg.at<uchar>(i,j);
+	
+         outImg.at<Vec3b>(i,count) = inImg.at<Vec3b>(i,j);
+         count++;
        }
      }
   }
@@ -217,10 +227,9 @@ int main( int argc, char* argv[]  ){
 
   int width, height;
 
-  int yCount = 0;
+  int xCount = atoi(argv[2]);
 
   queryDimensions(inImg, &height, &width);
-  int xCount = 40; // number of seams to be removed
 
   // declarations
   vector_vector energyMap(height, vector<unsigned int>(width,1));
@@ -249,13 +258,14 @@ int main( int argc, char* argv[]  ){
   computeSeamMap(enMap,r1, xCount, height, width, rSeamMap );
 
   // container for the output image
-  cv::Mat outImg(height,width-xCount,CV_8UC1);
+  cv::Mat outImg(height,width-xCount,CV_8UC3);
   //cv::Mat testImg(height, width, CV_8UC1);
   cv::Mat testImg = imGray.clone();
 
   // [2] Remove seams one by one.
 
-  removeSeams(outImg, imGray, seamMap, xCount);
+
+  removeSeams(outImg, inImg, seamMap, xCount);
   //testSeams(testImg, imGray, seamMap, xCount);
 
   // write the image back and show the image
