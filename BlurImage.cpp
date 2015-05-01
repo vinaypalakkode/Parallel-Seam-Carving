@@ -186,13 +186,15 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
 	       }
        }
        if (!found) {
-	   outImg.data[i*outImg.cols+count] = inImg.data[i*inImg.cols+j];
-	   count++;
+	   //outImg.data[i*outImg.cols+count] = inImg.data[i*inImg.cols+j];
+	 
+     outImg.at<Vec3b>(i,count) = inImg.at<Vec3b>(i,j);
+     
+     count++;
        }
      }
   }
 }
-
 
 
 int main( int argc, char* argv[]  ){
@@ -209,7 +211,7 @@ int main( int argc, char* argv[]  ){
   int yCount = 0;
 
   queryDimensions(inImg, &height, &width);
-  int xCount = 40; // number of seams to be removed
+  int xCount = 250; // number of seams to be removed
 
   // declarations
   vector_vector energyMap(height, vector<unsigned int>(width,1));
@@ -237,12 +239,12 @@ int main( int argc, char* argv[]  ){
   computeSeamMap(enMap,r1, xCount, height, width, rSeamMap );
 
   // container for the output image
-  cv::Mat outImg(height,width-xCount,CV_8UC1);
+  cv::Mat outImg(height,width-xCount,CV_8UC3);
   //cv::Mat testImg(height, width, CV_8UC1);
   cv::Mat testImg = imGray.clone();
 
   // [2] Remove seams one by one.
-  removeSeams(outImg, imGray, seamMap, xCount);
+  removeSeams(outImg, inImg, seamMap, xCount);
   //testSeams(testImg, imGray, seamMap, xCount);
 
   // write the image back and show the image
