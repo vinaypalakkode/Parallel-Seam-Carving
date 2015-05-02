@@ -5,5 +5,6 @@ git add cpu-only/type2/CMakeLists.txt
 git add cpu-only/type2/BlurImage.cpp
 git add cpu-only/type1/BlurImage.cpp
 git add *.jpg
-
 git add *.md
+git add git-add.sh
+git add .gitignore
