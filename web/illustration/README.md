@@ -1,1 +1,3 @@
-Keep your demo in this page
+in the place of  "Drag the dashed right-borders of the images below to resize them" add the following paragraph. (keep everything else unchanged.
+
+In order to get a feel of how different the outputs are when using seam carving over scaling kindly drag the-border of the images below towards the left. This would retarget the image by seamcarving (on the left image) and by scaling on the right image. It is worth a note to see the images with a lot of content spread across the entire space of the image would not be benefited by seam carving. In the opposite case scaling results in poor retargeting.
