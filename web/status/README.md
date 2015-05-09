@@ -8,7 +8,9 @@
  
 
     3.1 GPU-Speed up vs no of seams removed (width reduced) for a given resolution ( average figures)
+    
     3.2 GPU-Speed up vs the (width ) size of the image for a given number of seams to be removed.
+    
     3.3 A 3-D surface plot combining above two with more data points for completeness
 
 
