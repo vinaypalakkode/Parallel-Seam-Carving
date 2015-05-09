@@ -15,9 +15,9 @@ using namespace std;
 void checkArgs(int args){
 
 
-  if(args!=2){
+  if(args!=3){
 
-    std::cout<<" Usage: ./<exec> <input image name> ";
+    std::cout<<" Usage: ./<exec> <input image name> <num seams>";
     exit(0);
   }
 
@@ -185,7 +185,7 @@ void removeSeams(cv::Mat& outImg, cv::Mat& inImg, vector_vector& seamMap, int xC
 
        }
        if (!found) {
-	 outImg.at<uchar>(i,count) = inImg.at<uchar>(i,j);
+         outImg.at<Vec3b>(i,count) = inImg.at<Vec3b>(i,j);
 	 count++;
        }
      }
@@ -213,8 +213,10 @@ int main( int argc, char* argv[]  ){
   // sanity check for commandline
   checkArgs(argc);
 
+
+  string fileName =  argv[1];
  // read image to Mat
-  cv::Mat inImg = imread(argv[1],1);
+  cv::Mat inImg = imread(fileName,1);
   displayImage("input image", inImg);
 
   int width, height;
@@ -222,7 +224,7 @@ int main( int argc, char* argv[]  ){
   int yCount = 0;
 
   queryDimensions(inImg, &height, &width);
-  int xCount = 40; // number of seams to be removed
+  int xCount = atoi(argv[2]); // number of seams to be removed
 
   // declarations
   vector_vector energyMap(height, vector<unsigned int>(width,1));
@@ -255,8 +257,15 @@ int main( int argc, char* argv[]  ){
 
   testSeams(testImg, imGray, seamMap, xCount);
 
+  cv::Mat outImg( imGray.rows, imGray.cols-xCount,CV_8UC3);
+  removeSeams(outImg, inImg, seamMap, xCount);
+
   // write the image back and show the image
-  displayImage("test image", testImg);
+  displayImage("seams", testImg);
+  displayImage("output", outImg);
+  
+  imwrite( "input.png", testImg );
+  imwrite( "output.png", outImg );
 
   waitOnEsc();
 
