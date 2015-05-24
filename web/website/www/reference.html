@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Parallel Seam Carving</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"" rel="stylesheet">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <!-- Custom CSS -->
+    <link href="css/half-slider.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/seamcarving.html">Home</a>
+		  </li>
+                  <li>
+                    <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">Illustration</a>
+                  </li>
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/checkpoint.html">Status</a>
+		  </li>
+		   <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/results.html">Results</a>
+		  </li>
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/reference.html"> References </a>
+		  </li>
+		  <li>
+		    <a href="writeup.pdf">Writeup</a>
+		  </li>
+
+		  <li class="dropdown">
+		    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">About Us <span class="caret"></span></a>
+		    <ul class="dropdown-menu" role="menu">
+		      <li><a href="http://www.vinaypalakkode.me">Vinay Palakkode</a></li>
+		      <li><a href="contact.html">Aditya Bist</a></li>
+		    </ul>
+		  </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header id="myCarousel" class="page-header"> </header>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1><b>Parallel Seam Carving </b></h1>
+                <h3><b>Aditya Bist, Vinay Palakkode</b></h3>
+		<p><i> Our final project for the course 15-418: Parallel Computer Architecture and Programming </i></p>
+                <p> <b>Seam Carving </b> is a content-aware image resizing algorithm developed by <i>Shai Avidan</i>, of Mitsubishi Electric Research Laboratories (MERL), and <i>Ariel Shamir</i>, of the Interdisciplinary Center and MERL.<sup><a href="http://en.wikipedia.org/wiki/Seam_carving">[1]</a></sup> Check out the demo <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">here</a>. For the final writeup of the project, click <a href="writeup.pdf">here</a>.
+		    </p>
+		<hr>
+            </div>
+
+	 <div class = "col-lg-12">
+	   <h2 style="padding-bottom:20px">References</h2>
+	   <p>
+	     <ul>
+	       <li> Avidan, S. AND Shamir, A. 2007. <a href="http://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Avidan07.pdf">Seam Carving for Content-Aware Image Resizing.</a></li>
+	       <li> Duarte, R. AND Sendag, R. 2012. <a href="http://worldcomp-proceedings.com/proc/p2012/PDP3833.pdf">Accelerating and Characterizing Seam Carving Using a Heterogeneous CPU-GPU System.</a></li>
+               <li> Parashuram N. <a href="https://github.com/axemclion/seamcarving"> Javascript Seam Carving demonstration </a></li>
+	       <li> <a href="http://en.wikipedia.org/wiki/Seam_carving"> Wikipedia Page on Seam Carving </a></li>
+	       <li> <a href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/#axzz3ZarVKypx">NVIDIA CUDA Programming Guide</a></li>
+
+	     </ul>
+	   </p>
+	   <hr>
+	   </div>
+
+
+
+ <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Carnegie Mellon University 2015</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <!-- Script to Activate the Carousel -->
+    <script>
+    $('.carousel').carousel({
+        interval: 3000 //changes the speed
+    })
+    </script>
+
+</body>
+
+</html>

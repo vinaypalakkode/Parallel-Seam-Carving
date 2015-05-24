@@ -1,0 +1,157 @@
+<html>
+
+<head>
+    <title>Seam Carving: Javascript Canvas</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" />
+     <link rel="shortcut icon" href="favicon.ico">
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"" rel="stylesheet">
+
+<!--  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" type="text/css" href="test.css">
+</head>
+
+
+
+<body>
+   <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/seamcarving.html">Home</a>
+		  </li>
+                  <li>
+                    <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">Illustration</a>
+                  </li>
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/checkpoint.html">Status</a>
+		  </li>
+		    <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/results.html">Results</a>
+		  </li>
+		  <li>
+		    <a href="http://www.contrib.andrew.cmu.edu/~abist/reference.html">References</a>
+		  </li>
+		  <li>
+		    <a href="writeup.pdf">Writeup</a>
+		  </li>
+		  <li class="dropdown">
+		    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">About Us <span class="caret"></span></a>
+		    <ul class="dropdown-menu" role="menu">
+		      <li><a href="http://www.vinaypalakkode.me">Vinay Palakkode</a></li>
+		      <li><a href="contact.html">Aditya Bist</a></li>
+		    </ul>
+		  </li>
+              </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+   <header id="myCarousel" class="page-header"> </header>
+
+  <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1><b>Parallel Seam Carving </b></h1>
+                <h3><b>Aditya Bist, Vinay Palakkode</b></h3>
+		<p><i> Our final project for the course 15-418: Parallel Computer Architecture and Programming </i></p>
+                <p> <b>Seam Carving </b> is a content-aware image resizing algorithm developed by <i>Shai Avidan</i>, of Mitsubishi Electric Research Laboratories (MERL), and <i>Ariel Shamir</i>, of the Interdisciplinary Center and MERL.<sup><a href="http://en.wikipedia.org/wiki/Seam_carving">[1]</a></sup>  Check out the demo <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">here</a>. For the final writeup of the project, click <a href="writeup.pdf">here</a>.
+		</p>
+		<hr>
+		In order to get a feel of how different the outputs are when using seam carving over scaling kindly drag the-border of the images below towards the left. This would retarget the image by seamcarving (on the left image) and by scaling on the right image. It is worth a note to see the images with a lot of content spread across the entire space of the image would not be benefited by seam carving. In the opposite case scaling results in poor retargeting.
+		<hr>
+            </div>
+
+	    <div class = "clearfix">
+              <p class = "pull-left">
+		<b>The image below is resized by Seam Carving (Content Aware Resizing)</b>
+              </p>
+              <p class = "pull-right">
+		<b>The image below is resized by Scaling the image (Content Agnostic Resizing)</b>
+              </p>
+	    </div>
+
+	    <div class="clearfix">
+             <canvas id = "canvas"> </canvas>
+	    <!--  <div id="scc"> -->
+	     <div id ="source-container">
+		 <img id = "source">
+	    </div>
+	     <!-- </div> -->
+            <div id = "resizer"></div>
+	    </div>
+	    <hr>
+
+ <div class = "clearfix">
+        <h4>Try it with other images</h4>
+        <div id = "images" class = "row">
+            <div class="col-xs-2">
+	      <a href="#" class="thumbnail">
+                <img src_defer = "images/1.jpg" alt="125x125" >
+	      </a>
+            </div>
+	    <div class="col-xs-2">
+	      <a href="#" class="thumbnail">
+                <img src_defer = "images/2.jpg" alt="125x125">
+	      </a>
+	    </div>
+	    <div class="col-xs-2">
+	      <a href="#" class="thumbnail">
+                <img src_defer = "images/3.jpg" alt="125x125">
+	      </a>
+	    </div>
+	    <div class="col-xs-2">
+	      <a href="#" class="thumbnail">
+                <img src_defer = "images/4.jpg" alt="125x125">
+	      </a>
+	    </div>
+	    <div class="col-xs-2">
+	      <a href="#" class="thumbnail">
+                <img src_defer = "images/5.jpg" alt="125x125">
+	      </a>
+	    </div>
+
+	    <div class="col-xs-2" style="cursor:pointer" >
+	      <p class="well" style ="width : 125px; height: 110px" id="yourImage">
+		Upload your own image
+	      </p>
+              <input type = "file" id = "fileUpload" class = "hide" onchange = "handleFiles(this.files)"/>
+           </div>
+	</div>
+
+<hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Carnegie Mellon University 2015</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type = "text/javascript"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js" type = "text/javascript"></script>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+</html>

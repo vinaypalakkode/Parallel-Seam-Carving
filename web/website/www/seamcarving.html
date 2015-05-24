@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Parallel Seam Carving</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Custom CSS -->
+    <link href="css/half-slider.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+		     <li>
+		       <a href="http://www.contrib.andrew.cmu.edu/~abist/seamcarving.html">Home</a>
+		     </li>
+                     <li>
+                        <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">Illustration</a>
+                    </li>
+		     <li>
+		       <a href="http://www.contrib.andrew.cmu.edu/~abist/checkpoint.html">Status</a>
+		     </li>
+		      <li>
+		       <a href="http://www.contrib.andrew.cmu.edu/~abist/results.html">Results</a>
+		     </li>
+		     <li>
+		       <a href="http://www.contrib.andrew.cmu.edu/~abist/reference.html">References</a>
+		     </li>
+		     <li>
+		       <a href="writeup.pdf">Wiriteup</a>
+		     <li>
+		     <li class="dropdown">
+		       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">About Us <span class="caret"></span></a>
+		       <ul class="dropdown-menu" role="menu">
+			 <li><a href="http://www.vinaypalakkode.me">Vinay Palakkode</a></li>
+		         <li><a href="contact.html">Aditya Bist</a></li>
+		       </ul>
+		     </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header id="myCarousel" class="page-header"> </header>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1><b>Parallel Seam Carving </b></h1>
+                <h3><b>Aditya Bist, Vinay Palakkode</b></h3>
+		<p><i> Our final project for the course 15-418: Parallel Computer Architecture and Programming </i></p>
+                <p> <b>Seam Carving </b> is a content-aware image resizing algorithm developed by <i>Shai Avidan</i>, of Mitsubishi Electric Research Laboratories (MERL), and <i>Ariel Shamir</i>, of the Interdisciplinary Center and MERL.<sup><a href="http://en.wikipedia.org/wiki/Seam_carving">[1]</a></sup> Check out the demo <a href="http://www.contrib.andrew.cmu.edu/~abist/illustration.html">here</a>. For the final writeup of the project, click <a href="writeup.pdf">here</a>.
+		</p>
+            </div>
+
+	     <div class="col-lg-12">
+                <h3>Summary</h3>
+                <p> We are going to create optimized implementations of image seam-carving on both NVIDIA GPU and multi-core x86 CPU platforms. We are also trying to come up with an algorithm which can switch between content aware (seam carving) and content agnostic (bilinear interpolation) retargeting after inspecting some global statistics of the image.
+		</p>
+            </div>
+
+	     <div class="col-lg-12">
+                <h3>Background</h3>
+                <p>
+		  Standard interpolation based image scaling is oblivious to the image content and typically can be applied only uniformly. Cropping is limited since it can only remove pixels from the image periphery. More effective resizing can only be achieved by considering the image content and not only geometric constraints. Seam carving is such an image retargeting algorithm.  A seam is an optimal 8-connected path of pixels on a single image from top to bottom, or left to right, where optimality is defined by an image energy function. By repeatedly carving out or inserting seams in one direction we can change the aspect ratio of an image.<sup><a href="http://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Avidan07.pdf">[2]</a></sup>
+		</p>
+		 <p>
+                  <div align="center"><img src="images/seam-example.png"></div>
+		  <div align="center"><i>Comparing aspect ratio change. From left to right in the bottom: the image resized using seam removals, scaling and cropping.<sup><a href="http://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Avidan07.pdf">[2]</a></sup></i></div>
+                </p>
+		<p> Seam Carving consists of two compute intense stages viz <b>energy function computation</b> and <b>seam map computation.</b>
+		  <ul>
+		    <li> Energy function is quantitative measure of visual information/content. Although seam carving can support several types of energy functions such as gradient magnitude, entropy, visual salience etc, we choose gradient magnitude. Energy function, <b>e<sub>1</sub>(I)</b> is defined over the image <b>I</b> as -
+		  </ul>
+		</p>
+		<p>
+		  <div align="center"><img src="images/energy.png"></div>
+		</p>
+		<p>
+		  <ul>
+		    <li> A vertical seam is an 8-connected path of pixels in the image from top to bottom, containing one, and only one, pixel in each row of the image. Given an energy function <i>e</i>,the optimal seam can be found using dynamic programming. The first step is to traverse the image from the second row to the last row and compute the cumulative minimum energy M for all possible connected seams for each entry (i, j):
+		  </ul>
+		</p>
+		<p>
+		  <div align="center"><img src="images/seam-map.png"></div>
+		</p>
+            </div>
+
+	     <div class="col-lg-12">
+                <h3>Challenges</h3>
+                <p>
+		  <ul>
+		    <li> The default seam carving algorithm uses dynamic programming for the seam map computation, which is not GPU friendly and there is very low computation to communication ratio.
+		    <li> In order to speed up this algorithm, we definitely have to make approximations which would result in degradation of the retargeted image quality (aka. result in visual artifacts). Since there is no groundtruth for us to compare the modified algorithms ouputs to, defining an evaluation metrics for us is as challenging as optimizing the baseline algorithm itself (if not more)
+		    <li> Creating a test dataset (input images) with different energy distributions/patterns so as to see the extent of artifacts introduced by the approximations.
+		</p>
+            </div>
+
+	     <div class="col-lg-12">
+                <h3>Resources</h3>
+                <p>
+		  <ul>
+		    <li> We would like to use the GHC machine with NVIDIA GTX 780 (GHC 41) and one of our personal machines with a GTX 750 for benchmarking the GPU implementation.
+		    <li> We will use a MacBook Pro "Core i7" 2.8 15-Inch (Mid-2014 Retina Display) which features a 22 nm "Haswell/Crystalwell" 2.8 GHz Intel "Core i7" processor (4980HQ), with four independent processor "cores" on a single silicon chip, a 6 MB shared level 3 cache, 16 GB of onboard 1600 MHz DDR3L SDRAM, 512 GB of PCIe-based flash storage for the CPU implementation.
+		    <li> The reference algorithm is <b><a href="http://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Avidan07.pdf">Seam Carving for Content-Aware Image Resizing.</a></b>
+		</p>
+            </div>
+
+	     <div class="col-lg-12">
+                <h3>Goals and Deliverables</h3>
+                <p>
+		  <ul>
+		    <li> Implementation and analysis of the performance of the seam caving (like) algorithm on NVIDIA GTX 750 using the x86(Haswell) implementation as the baseline.
+		    <li> We will illustrate the test cases / scenarios where this algorithms performs well without sacrificing the quality of the output significantly. We will also report the negative test cases.
+		    <li> As a nice to have feature, we will propose a hybrid algorithm which would choose either content aware or content agnostic retargeting to produce a <i>good</i> quality retargeted image.
+		</p>
+            </div>
+
+
+	     <div class="col-lg-12">
+	       <p> <a href="writeup.pdf"><b>Here</b></a> is the final writeup.</p>
+	     </div>
+
+	</div>
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Carnegie Mellon University 2015</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
